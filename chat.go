@@ -6,7 +6,8 @@ import (
 	"io"
 	"net/http"
 	"strings"
-	"zaigosdk/config"
+
+	"github.com/pykelysia/zaigosdk/config"
 )
 
 func MustDefaultChatModel() *ChatModel {

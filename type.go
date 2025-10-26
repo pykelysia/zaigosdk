@@ -1,6 +1,6 @@
 package zaigosdk
 
-import "zaigosdk/config"
+import "github.com/pykelysia/zaigosdk/config"
 
 type (
 	ChatModel struct {
