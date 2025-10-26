@@ -1,21 +1,6 @@
-package config
+package zaigosdk
 
 type (
-	Config struct {
-		// 你的智谱 Api-Key值。记录在文件 `/config/.env` 中的 AI_API_KEY
-		ApiKey string
-		// 调用智谱 Api 的基本 url。记录在文件 `/config/config.yaml` 中的 AI_URL
-		URL string
-	}
-
-	ModelConfig struct {
-		Config
-		// AI 模型的型号。
-		Model string
-		// 调用的 API-url。
-		API API
-	}
-
 	API struct {
 		// 对话补全 Api 的 url
 		Chat string
@@ -44,7 +29,12 @@ type (
 )
 
 var (
-	// 存储可能用到的大部分 Api 的 url
+	// 0 - 10
+	GLM []string = []string{
+		"glm-4.6", "glm-4.5", "glm-4.5-air", "glm-4.5-x", "glm-4.5-airx",
+		"glm-4.5-flash", "glm-4-plus", "glm-4-air-250414", "glm-4-airx",
+		"glm-4-flashx", "glm-4-flashx-250414",
+	}
 	ApiConfig = API{
 		Chat:          "/paas/v4/chat/completions",
 		ChatAsyncPost: "/paas/v4/async/chat/completions",
@@ -52,6 +42,12 @@ var (
 		Image:         "/paas/v4/images/generations",
 		AudioToTxt:    "/paas/v4/audio/transcriptions",
 		TxtToAudio:    "/paas/v4/audio/speech",
-		NewFunction:   "",
 	}
+)
+
+const (
+	ROLESYSTEM    = "system"
+	ROLEUSER      = "user"
+	ROLEASSISTANT = "assistant"
+	charset       = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 )

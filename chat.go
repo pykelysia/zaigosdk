@@ -6,20 +6,18 @@ import (
 	"io"
 	"net/http"
 	"strings"
-
-	"github.com/pykelysia/zaigosdk/config"
 )
 
 func MustDefaultChatModel() *ChatModel {
-	modelconfig := config.MustDefaultModelConfig()
+	config := MustNewConfig()
 	return &ChatModel{
-		ModelConfig: modelconfig,
-		url:         modelconfig.URL + modelconfig.API.Chat,
+		Config: config,
+		url:    config.URL + config.API.Chat,
 		ChatModelConfig: ChatModelConfig{
-			Model: modelconfig.Model,
+			Model: GLM[0],
 			Messages: []Message{
 				{
-					Role:    "system",
+					Role:    ROLESYSTEM,
 					Content: "你是一个有用的AI助手。",
 				},
 			},
@@ -32,10 +30,10 @@ func MustDefaultChatModel() *ChatModel {
 
 // 需要将所有参数填写
 func MustNewChatModel(cmc ChatModelConfig) *ChatModel {
-	modelconfig := config.MustNewModelConfig(cmc.Model)
+	config := MustNewConfig()
 	return &ChatModel{
-		ModelConfig:     modelconfig,
-		url:             modelconfig.URL + modelconfig.API.Chat,
+		Config:          config,
+		url:             config.URL + config.API.Chat,
 		ChatModelConfig: cmc,
 	}
 }
@@ -67,7 +65,7 @@ func (cm *ChatModel) appendConversation(role, content string) {
 }
 
 func (cm *ChatModel) Chat(content string) string {
-	cm.appendConversation("user", content)
+	cm.appendConversation(ROLEUSER, content)
 	url := cm.url
 	payload := strings.NewReader(cm.toString())
 
@@ -94,7 +92,7 @@ func (cm *ChatModel) Chat(content string) string {
 	}
 
 	ai_response := response.Choices[0].Message.Content
-	cm.appendConversation("assistant", ai_response)
+	cm.appendConversation(ROLEASSISTANT, ai_response)
 
 	return ai_response
 }

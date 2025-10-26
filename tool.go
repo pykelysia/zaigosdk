@@ -5,8 +5,6 @@ import (
 	"time"
 )
 
-const charset string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
 func getRandomString(left, right int) string {
 	rand.Seed(time.Now().Unix())
 	length := rand.Intn(right-left) + left

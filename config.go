@@ -1,4 +1,4 @@
-package config
+package zaigosdk
 
 import (
 	"fmt"
@@ -23,21 +23,6 @@ func MustNewConfig() Config {
 	return Config{
 		ApiKey: os.Getenv("AI_API_KEY"),
 		URL:    viper.GetString("AI_URL"),
-	}
-}
-
-func MustDefaultModelConfig() ModelConfig {
-	return ModelConfig{
-		Config: MustNewConfig(),
-		Model:  "glm-4.5",
-		API:    ApiConfig,
-	}
-}
-
-func MustNewModelConfig(model string) ModelConfig {
-	return ModelConfig{
-		Config: MustNewConfig(),
-		Model:  model,
 		API:    ApiConfig,
 	}
 }
