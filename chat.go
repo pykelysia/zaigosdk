@@ -16,7 +16,7 @@ type (
 	ChatModelConfig    zaitype.ChatModelConfig
 	ChatThinking       zaitype.ChatThinking
 	ChatResponseFormat zaitype.ChatResponseFormat
-	response           zaitype.ChatResponse
+	ChatResponse       zaitype.ChatResponse
 )
 
 func MustDefaultChatModel() *ChatModel {
@@ -62,7 +62,6 @@ func (cm *ChatModel) toString() (s string, err error) {
 	}
 	bytes, err := json.Marshal(request)
 	if err != nil {
-		err = fmt.Errorf("[Error]: message: 请求参数序列化失败, %v", err)
 		return s, err
 	}
 	s = string(bytes)
@@ -76,12 +75,12 @@ func (cm *ChatModel) appendConversation(role, content string) {
 	}))
 }
 
-func (cm *ChatModel) Chat(content string) (string, error) {
+func (cm *ChatModel) Chat(content string) (ChatResponse, error) {
 	cm.appendConversation(ROLEUSER, content)
 	url := cm.URL
 	s, err := cm.toString()
 	if err != nil {
-		return "", fmt.Errorf("[Error]: message: 请求参数序列化失败, %v", err)
+		return ChatResponse{}, fmt.Errorf("[Error]: message: 请求参数序列化失败, %v", err)
 	}
 	payload := strings.NewReader(s)
 
@@ -91,23 +90,23 @@ func (cm *ChatModel) Chat(content string) (string, error) {
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("[Error]: message: 远程服务器错误, %v", err)
+		return ChatResponse{}, fmt.Errorf("[Error]: message: 远程服务器错误, %v", err)
 	}
 	defer res.Body.Close()
 
 	body, _ := io.ReadAll(res.Body)
-	var response response
+	var response ChatResponse
 	err = json.Unmarshal(body, &response)
 	if err != nil {
-		return "", fmt.Errorf("[Error]: message: 响应获取失败, %v", err)
+		return ChatResponse{}, fmt.Errorf("[Error]: message: 响应获取失败, %v", err)
 	}
 	if response.Error.Code != "" {
 		e := response.Error
-		return "", fmt.Errorf("[Error]: code: %s, message: %s\n", e.Code, e.Message)
+		return ChatResponse{}, fmt.Errorf("[Error]: code: %s, message: %s\n", e.Code, e.Message)
 	}
 
 	ai_response := response.Choices[0].Message.Content
 	cm.appendConversation(ROLEASSISTANT, ai_response)
 
-	return ai_response, nil
+	return response, nil
 }
