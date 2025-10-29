@@ -25,7 +25,7 @@ func MustDefaultChatModel() *ChatModel {
 		Config: config,
 		URL:    config.URL + ApiConfig.Chat,
 		ChatModelConfig: zaitype.ChatModelConfig{
-			Model: GLM[0],
+			Model: GLM4_6,
 			Messages: []zaitype.ChatMessage{
 				{
 					Role:    ROLESYSTEM,
@@ -49,7 +49,7 @@ func MustNewChatModel(cmc ChatModelConfig) *ChatModel {
 	}
 }
 
-func (cm *ChatModel) toString() (s string) {
+func (cm *ChatModel) toString() (s string, err error) {
 	request := cm.ChatModelConfig
 	if request.RequestID == "" {
 		request.RequestID = getRandomString(6, 64)
@@ -62,7 +62,8 @@ func (cm *ChatModel) toString() (s string) {
 	}
 	bytes, err := json.Marshal(request)
 	if err != nil {
-		fmt.Println("请求生成失败")
+		err = fmt.Errorf("[Error]: message: 请求参数序列化失败, %v", err)
+		return s, err
 	}
 	s = string(bytes)
 	return
@@ -75,10 +76,14 @@ func (cm *ChatModel) appendConversation(role, content string) {
 	}))
 }
 
-func (cm *ChatModel) Chat(content string) string {
+func (cm *ChatModel) Chat(content string) (string, error) {
 	cm.appendConversation(ROLEUSER, content)
 	url := cm.URL
-	payload := strings.NewReader(cm.toString())
+	s, err := cm.toString()
+	if err != nil {
+		return "", fmt.Errorf("[Error]: message: 请求参数序列化失败, %v", err)
+	}
+	payload := strings.NewReader(s)
 
 	req, _ := http.NewRequest("POST", url, payload)
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", cm.ApiKey))
@@ -86,7 +91,7 @@ func (cm *ChatModel) Chat(content string) string {
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Println("远程服务器错误")
+		return "", fmt.Errorf("[Error]: message: 远程服务器错误, %v", err)
 	}
 	defer res.Body.Close()
 
@@ -94,16 +99,15 @@ func (cm *ChatModel) Chat(content string) string {
 	var response response
 	err = json.Unmarshal(body, &response)
 	if err != nil {
-		fmt.Println("响应获取失败")
+		return "", fmt.Errorf("[Error]: message: 响应获取失败, %v", err)
 	}
 	if response.Error.Code != "" {
 		e := response.Error
-		fmt.Printf("[Error]: code: %s, message: %s\n", e.Code, e.Message)
-		return ""
+		return "", fmt.Errorf("[Error]: code: %s, message: %s\n", e.Code, e.Message)
 	}
 
 	ai_response := response.Choices[0].Message.Content
 	cm.appendConversation(ROLEASSISTANT, ai_response)
 
-	return ai_response
+	return ai_response, nil
 }
