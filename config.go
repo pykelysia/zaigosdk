@@ -5,10 +5,11 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/pykelysia/zaigosdk/zaitype"
 	"github.com/spf13/viper"
 )
 
-func MustNewConfig() Config {
+func MustNewConfig() zaitype.Config {
 	// 加载环境变量
 	godotenv.Load("./config/.env")
 
@@ -20,9 +21,8 @@ func MustNewConfig() Config {
 		panic(fmt.Sprintf("read file config.yaml error: %s", err))
 	}
 
-	return Config{
+	return zaitype.Config{
 		ApiKey: os.Getenv("AI_API_KEY"),
 		URL:    viper.GetString("AI_URL"),
-		API:    ApiConfig,
 	}
 }

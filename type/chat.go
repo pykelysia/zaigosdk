@@ -1,22 +1,13 @@
-package zaigosdk
+package zaitype
 
 type (
-	Config struct {
-		// 你的智谱 Api-Key值。记录在文件 `/config/.env` 中的 AI_API_KEY
-		ApiKey string
-		// 调用智谱 Api 的基本 url。记录在文件 `/config/config.yaml` 中的 AI_URL
-		URL string
-		// 调用的 API-url。
-		API API
-	}
-
 	ChatModel struct {
 		Config
 		ChatModelConfig
-		url string
+		URL string
 	}
 
-	Message struct {
+	ChatMessage struct {
 		// 信息作者的角色，包括 "user", "system", "assistant"
 		Role string `json:"role"`
 
@@ -24,11 +15,11 @@ type (
 		Content string `json:"content"`
 	}
 
-	Thinking struct {
+	ChatThinking struct {
 		Type string `json:"type"`
 	}
 
-	ResponseFormat struct {
+	ChatResponseFormat struct {
 		Type string `json:"type"`
 	}
 
@@ -38,7 +29,7 @@ type (
 		Model string `json:"model"`
 
 		// 对话内容列表
-		Messages []Message `json:"messages"`
+		Messages []ChatMessage `json:"messages"`
 
 		// 是否启用流式输出
 		Stream bool `json:"stream"`
@@ -46,7 +37,7 @@ type (
 		// 是否开启思考链，仅 GLM4.5 以上模型支持
 		// 支持的值为 "enabled" , "disabled"，默认状态下为 "enabled"
 		// 开启之后 GLM-4.6, GLM4.5 会自动判断是否需要进行思考，GLM4.5V 为强制思考
-		Thinking Thinking `json:"thinking"`
+		Thinking ChatThinking `json:"thinking"`
 
 		// 是否启用采样策略来生成文本，默认为 true。
 		// 开启时表示模型会启用 temperature, top_p 等参数进行随机采样，生成更多样化的输出
@@ -87,7 +78,7 @@ type (
 		// 支持两种格式：{ "type": "text" } 表示普通文本输出模式，模型返回自然语言文本；
 		// 				{ "type": "json_object" } 表示JSON输出模式，模型会返回有效的JSON格式数据，适用于结构化数据提取、API响应生成等场景。
 		// 使用JSON模式时，建议在提示词中明确说明需要JSON格式输出。
-		ResponseFormat ResponseFormat `json:"responae_format"`
+		ResponseFormat ChatResponseFormat `json:"responae_format"`
 
 		// 请求唯一标识符。由用户端传递，建议使用UUID格式确保唯一性，若未提供平台将自动生成。
 		RequestID string `json:"request_id"`
@@ -97,7 +88,7 @@ type (
 		UserID string `json:"user_id"`
 	}
 
-	response struct {
+	ChatResponse struct {
 		Choices []struct {
 			FinishReason string `json:"finish_reason"`
 			Index        int    `json:"index"`

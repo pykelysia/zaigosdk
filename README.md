@@ -16,13 +16,13 @@ ZAI-GO-SDK(ZGS) 是一个基于 `Golang` 和 `智谱API` 开发的为智谱平�
 ## 项目结构
 
 ```
-├─example               // 示例代码
-    │─chatweithconfig   // 修改了部分配置文件的 chat 示例
-│   └─chat              // chat 示例
+├─example
+│  ├─chat
+│  └─chatwithconfig
+├─type
 ├─config.go             // 加载配置文件函数
 ├─chat.go               // chat 主文件
 ├─tool.go               // 工具函数
-├─type.go               // 类型定义
 ├─var.go                // 定义常量
 ├─go.mod                // go mod 文件
 ├─go.sum                // go sum 文件

@@ -6,16 +6,27 @@ import (
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/pykelysia/zaigosdk/zaitype"
+)
+
+type (
+	ChatModel          zaitype.ChatModel
+	ChatMessage        zaitype.ChatMessage
+	ChatModelConfig    zaitype.ChatModelConfig
+	ChatThinking       zaitype.ChatThinking
+	ChatResponseFormat zaitype.ChatResponseFormat
+	response           zaitype.ChatResponse
 )
 
 func MustDefaultChatModel() *ChatModel {
 	config := MustNewConfig()
 	return &ChatModel{
 		Config: config,
-		url:    config.URL + config.API.Chat,
-		ChatModelConfig: ChatModelConfig{
+		URL:    config.URL + ApiConfig.Chat,
+		ChatModelConfig: zaitype.ChatModelConfig{
 			Model: GLM[0],
-			Messages: []Message{
+			Messages: []zaitype.ChatMessage{
 				{
 					Role:    ROLESYSTEM,
 					Content: "你是一个有用的AI助手。",
@@ -33,8 +44,8 @@ func MustNewChatModel(cmc ChatModelConfig) *ChatModel {
 	config := MustNewConfig()
 	return &ChatModel{
 		Config:          config,
-		url:             config.URL + config.API.Chat,
-		ChatModelConfig: cmc,
+		URL:             config.URL + ApiConfig.Chat,
+		ChatModelConfig: zaitype.ChatModelConfig(cmc),
 	}
 }
 
@@ -58,15 +69,15 @@ func (cm *ChatModel) toString() (s string) {
 }
 
 func (cm *ChatModel) appendConversation(role, content string) {
-	cm.Messages = append(cm.Messages, Message{
+	cm.Messages = append(cm.Messages, zaitype.ChatMessage(ChatMessage{
 		Role:    role,
 		Content: content,
-	})
+	}))
 }
 
 func (cm *ChatModel) Chat(content string) string {
 	cm.appendConversation(ROLEUSER, content)
-	url := cm.url
+	url := cm.URL
 	payload := strings.NewReader(cm.toString())
 
 	req, _ := http.NewRequest("POST", url, payload)
