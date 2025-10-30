@@ -1,4 +1,3 @@
-# ZAI-GO-SDK
 <div align="center">
     <h1>ZAI-GO-SDK</h1>
     <img alt="GitHub License" src="https://img.shields.io/github/license/dingdinglz/ReelFlow">
@@ -22,6 +21,7 @@ ZAI-GO-SDK(ZGS) 是一个基于 `Golang` 和 `智谱API` 开发的为智谱平�
 ├─type
 ├─config.go             // 加载配置文件函数
 ├─chat.go               // chat 主文件
+├─image.go              // image 主文件
 ├─tool.go               // 工具函数
 ├─var.go                // 定义常量
 ├─go.mod                // go mod 文件
