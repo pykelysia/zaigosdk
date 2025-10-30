@@ -44,5 +44,9 @@ type (
 			Role  string `json:"role"`
 			Level int    `json:"level"`
 		} `json:"content_filter"`
+		Error struct {
+			Code    string `json:"code"`
+			Message string `json:"message"`
+		} `json:"error"`
 	}
 )

@@ -85,6 +85,10 @@ func (im *ImageModel) Chat(content string) (ImageResponse, error) {
 	if err != nil {
 		return ImageResponse{}, fmt.Errorf("[Error]: message: 响应获取失败, %v", err)
 	}
+	if response.Error.Code != "" {
+		e := response.Error
+		return response, fmt.Errorf("[Error]: code: %s, message: %s\n", e.Code, e.Message)
+	}
 
 	return response, nil
 }
