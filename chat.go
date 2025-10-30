@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/pykelysia/zaigosdk/zaitype"
+	zaitype "github.com/pykelysia/zaigosdk/type"
 )
 
 type (

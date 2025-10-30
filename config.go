@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/pykelysia/zaigosdk/zaitype"
+	zaitype "github.com/pykelysia/zaigosdk/type"
 	"github.com/spf13/viper"
 )
 
