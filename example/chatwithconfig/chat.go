@@ -4,27 +4,27 @@ import (
 	"fmt"
 
 	"github.com/pykelysia/zaigosdk"
-)
-
-var (
-	glm = zaigosdk.GLM
+	zaitype "github.com/pykelysia/zaigosdk/type"
 )
 
 func main() {
 	cmc := zaigosdk.ChatModelConfig{
-		Model: glm[1],
-		Messages: []zaigosdk.Message{
+		Model: zaigosdk.GLM4_6,
+		Messages: []zaitype.ChatMessage{
 			{
 				Role:    zaigosdk.ROLESYSTEM,
 				Content: "你是一个猫娘，你要在回答中处处体现你作为一个猫娘的特点。",
 			},
 		},
 		Temperature: 0.9,
-		Thinking: zaigosdk.Thinking{
+		Thinking: zaitype.ChatThinking{
 			Type: "enabled",
 		},
 	}
 	chatClient := zaigosdk.MustNewChatModel(cmc)
-	response := chatClient.Chat("简述人工智能的历史")
+	response, err := chatClient.Chat("简述人工智能的历史")
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println(response)
 }

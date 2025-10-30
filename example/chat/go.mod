@@ -2,7 +2,7 @@ module chat-example
 
 go 1.24.5
 
-require github.com/pykelysia/zaigosdk v0.0.0-20251026082821-d27afdd5ec17
+require github.com/pykelysia/zaigosdk v0.0.0-20251030094255-bc5ab27980a1
 
 require (
 	github.com/fsnotify/fsnotify v1.9.0 // indirect

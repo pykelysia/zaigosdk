@@ -8,6 +8,9 @@ import (
 
 func main() {
 	chatClient := zaigosdk.MustDefaultChatModel()
-	response := chatClient.Chat("任意回答事或否")
+	response, err := chatClient.Chat("任意回答事或否")
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println(response)
 }
