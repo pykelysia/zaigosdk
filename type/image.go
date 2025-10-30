@@ -39,10 +39,10 @@ type (
 		Created int `json:"created"`
 		Data    []struct {
 			URL string `json:"url"`
-		}
+		} `json:"data"`
 		ContentFilter []struct {
 			Role  string `json:"role"`
 			Level int    `json:"level"`
-		}
+		} `json:"content_filter"`
 	}
 )
