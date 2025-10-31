@@ -16,13 +16,17 @@ type (
 	ImageResponse    zaitype.ImageResponse
 )
 
+var (
+	imageAvaliModel = zaitype.IMAGEAVALIMODEL
+)
+
 func MustDefaultImageModel() *ImageModel {
 	config := MustNewConfig()
 	return &ImageModel{
 		Config: config,
 		URL:    config.URL + ApiConfig.Image,
 		ImageModelConfig: zaitype.ImageModelConfig{
-			Model:     GLM4_6,
+			Model:     imageAvaliModel.Cogview4_250304,
 			Prompt:    "",
 			Quality:   ImageQuality.Standard,
 			Size:      ImageSiae[0],
