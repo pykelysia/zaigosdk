@@ -13,7 +13,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	time.Sleep(time.Minute)
+
 	gets, err := zaigosdk.CheckResult(response.ID)
 
 	fmt.Println(response)
