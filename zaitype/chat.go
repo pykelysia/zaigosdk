@@ -111,9 +111,6 @@ type (
 			} `json:"prompt_tokens_details"`
 			Total_tokens int `json:"total_tokens"`
 		} `json:"usage"`
-		Error struct {
-			Code    string `json:"code"`
-			Message string `json:"message"`
-		} `json:"error"`
+		Error `json:"error"`
 	}
 )
