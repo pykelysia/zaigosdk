@@ -17,6 +17,7 @@ type (
 	ChatThinking       zaitype.ChatThinking
 	ChatResponseFormat zaitype.ChatResponseFormat
 	ChatResponse       zaitype.ChatResponse
+	AsyncResponse      zaitype.AsyncResponse
 )
 
 func MustDefaultChatModel() *ChatModel {
@@ -107,6 +108,39 @@ func (cm *ChatModel) Chat(content string) (ChatResponse, error) {
 
 	ai_response := response.Choices[0].Message.Content
 	cm.appendConversation(ROLEASSISTANT, ai_response)
+
+	return response, nil
+}
+
+func (cm *ChatModel) ChatAsync(content string) (AsyncResponse, error) {
+	cm.appendConversation(ROLEUSER, content)
+	url := cm.Config.URL + ApiConfig.ChatAsyncPost
+	s, err := cm.toString()
+	if err != nil {
+		return AsyncResponse{}, fmt.Errorf("[Error]: message: 请求参数序列化失败, %v", err)
+	}
+	payload := strings.NewReader(s)
+
+	req, _ := http.NewRequest("POST", url, payload)
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", cm.ApiKey))
+	req.Header.Add("Content-Type", "application/json")
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return AsyncResponse{}, fmt.Errorf("[Error]: message: 远程服务器错误, %v", err)
+	}
+	defer res.Body.Close()
+
+	body, _ := io.ReadAll(res.Body)
+	var response AsyncResponse
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return AsyncResponse{}, fmt.Errorf("[Error]: message: 响应获取失败, %v", err)
+	}
+	if response.Error.Code != "" {
+		e := response.Error
+		return AsyncResponse{}, fmt.Errorf("[Error]: code: %s, message: %s\n", e.Code, e.Message)
+	}
 
 	return response, nil
 }

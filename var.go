@@ -12,7 +12,7 @@ type (
 		// 获取异步补全的结果 Api 的 url，通过 ChatAsyncGet + "id" 的方法获取结果。
 		// id 来自对应异步请求的返回。
 		// 建议用: fmt.Sprintf("%s/%s", ChatAsyncGet, id)
-		ChatAsyncGet string
+		AsyncGet string
 
 		// 生成图片 Api 的 url，生成的图片会返回 url。该 url 保存 30 天的时间。
 		Image string
@@ -37,7 +37,7 @@ var (
 	ApiConfig = API{
 		Chat:          "/paas/v4/chat/completions",
 		ChatAsyncPost: "/paas/v4/async/chat/completions",
-		ChatAsyncGet:  "/paas/v4/async-result",
+		AsyncGet:      "/paas/v4/async-result",
 		Image:         "/paas/v4/images/generations",
 		AudioToTxt:    "/paas/v4/audio/transcriptions",
 		TxtToAudio:    "/paas/v4/audio/speech",
